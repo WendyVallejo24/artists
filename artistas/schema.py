@@ -78,3 +78,5 @@ class CreateArtista(graphene.Mutation):
 #4
 class Mutation(graphene.ObjectType):
     create_artista = CreateArtista.Field()
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
