@@ -12,6 +12,14 @@ from artistas.models import Artista
 ARTISTAS_QUERY = '''
  { artistas { id nombre anioNac edad generoArtist nacionalidad generoMusica cantIntegrantes cantAlbumes cantSencillos cantTours }}
 '''
+CREATE_ARTISTAS_MUTATION = '''
+mutation createArtistaMutation($id: Int, $nombre: String, $anioNac: Int, $edad: Int, $generoArtist: String, $nacionalidad: String, $generoMusica: String, $cantIntegrantes: Int, $cantAlbumes: Int, $cantSencillos: Int, $cantTours: Int) { 
+ createArtista(id: $id, nombre: $nombre, anioNac: $anioNac, edad: $edad, generoArtist: $generoArtist, nacionalidad: $nacionalidad, generoMusica: $generoMusica, cantIntegrantes: $cantIntegrantes, cantAlbumes: $cantAlbumes, cantSencillos: $cantSencillos, cantTours: $cantTours) { 
+  nombre
+ }
+}
+'''
+
 class ArtistaTestCase(GraphQLTestCase):
     GRAPHQL_SCHEMA = schema
     def setUp(self):
@@ -29,3 +37,15 @@ class ArtistaTestCase(GraphQLTestCase):
         print ("query artistas results ")
         print (content)
         assert len(content['data']['artistas']) == 2
+
+    def test_createArtista_mutation(self):
+        response = self.query(
+            CREATE_ARTISTAS_MUTATION,
+            variables={'id': 6, 'nombre': 'Sebastian Yatra', 'anioNac': 1994, 'edad': 28, 'generoArtist': 'M', 'nacionalidad': 'Colombiana', 'generoMusica': 'pop', 'cantIntegrantes': 1, 'cantAlbumes': 4, 'cantSencillos': 40, 'cantTours': 3}
+        )
+        print('mutation ')
+        print(response)
+        content = json.loads(response.content)
+        print(content)
+        self.assertResponseNoErrors(response)
+        self.assertDictEqual({"createArtista": {"nombre": "Sebastian Yatra"}}, content['data'])
