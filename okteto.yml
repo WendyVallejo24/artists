@@ -1,0 +1,12 @@
+build:
+ wendyvallejo24:  # cambiar por su namespace de okteto
+   image: okteto.dev/wendyvallejo24:latest  # cambiar por su namespace de okteto
+
+deploy:
+ - okteto build # build the image with the latest code
+ - kubectl apply -f manifests # create all the resources in kubernetes
+dev:
+ adsoftsito:
+   command: bash
+   sync:
+   - .:/artists   # cambiar por su proyecto
